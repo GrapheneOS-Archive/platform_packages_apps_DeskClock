@@ -210,7 +210,7 @@ public class DigitalAppWidgetProvider extends AppWidgetProvider {
         // Tapping on the widget opens the app (if not on the lock screen).
         if (Utils.isWidgetClickable(wm, widgetId)) {
             final Intent openApp = new Intent(context, DeskClock.class);
-            final PendingIntent pi = PendingIntent.getActivity(context, 0, openApp, 0);
+            final PendingIntent pi = PendingIntent.getActivity(context, 0, openApp, PendingIntent.FLAG_IMMUTABLE);
             rv.setOnClickPendingIntent(R.id.digital_widget, pi);
         }
 
@@ -276,7 +276,7 @@ public class DigitalAppWidgetProvider extends AppWidgetProvider {
             // Tapping on the widget opens the city selection activity (if not on the lock screen).
             if (Utils.isWidgetClickable(wm, widgetId)) {
                 final Intent selectCity = new Intent(context, CitySelectionActivity.class);
-                final PendingIntent pi = PendingIntent.getActivity(context, 0, selectCity, 0);
+                final PendingIntent pi = PendingIntent.getActivity(context, 0, selectCity, PendingIntent.FLAG_IMMUTABLE);
                 rv.setPendingIntentTemplate(R.id.world_city_list, pi);
             }
         }
@@ -370,7 +370,7 @@ public class DigitalAppWidgetProvider extends AppWidgetProvider {
 
         // Schedule the next day-change callback; at least one city is displayed.
         final PendingIntent pi =
-                PendingIntent.getBroadcast(context, 0, DAY_CHANGE_INTENT, FLAG_UPDATE_CURRENT);
+                PendingIntent.getBroadcast(context, 0, DAY_CHANGE_INTENT, FLAG_UPDATE_CURRENT  | PendingIntent.FLAG_IMMUTABLE);
         getAlarmManager(context).setExact(AlarmManager.RTC, nextDay.getTime(), pi);
     }
 
@@ -379,7 +379,7 @@ public class DigitalAppWidgetProvider extends AppWidgetProvider {
      */
     private void removeDayChangeCallback(Context context) {
         final PendingIntent pi =
-                PendingIntent.getBroadcast(context, 0, DAY_CHANGE_INTENT, FLAG_NO_CREATE);
+                PendingIntent.getBroadcast(context, 0, DAY_CHANGE_INTENT, FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE);
         if (pi != null) {
             getAlarmManager(context).cancel(pi);
             pi.cancel();

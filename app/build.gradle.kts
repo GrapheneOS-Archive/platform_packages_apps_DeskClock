@@ -9,11 +9,12 @@ java {
     }
 }
 
+val packageName = "com.android.deskclock"
 android {
     compileSdk = 35
     buildToolsVersion = "35.0.0"
 
-    namespace = "com.android.deskclock"
+    namespace = packageName
 
     defaultConfig {
         versionCode = 15
@@ -24,9 +25,15 @@ android {
     }
 
     buildTypes {
+        release {
+            resValue("string", "clock_provider", packageName)
+        }
+
         getByName("debug") {
-            applicationIdSuffix = ".debug"
+            val packageNameSuffix = ".debug"
+            applicationIdSuffix = packageNameSuffix
             resValue("string", "app_label", "Clock d")
+            resValue("string", "clock_provider", "$packageName$packageNameSuffix")
         }
     }
 

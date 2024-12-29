@@ -22,7 +22,7 @@
     <original-package android:name="com.android.alarmclock" />
     <original-package android:name="com.android.deskclock" />
 
-    <uses-sdk android:minSdkVersion="29" android:targetSdkVersion="29" />
+    <uses-sdk android:minSdkVersion="35" android:targetSdkVersion="35" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -31,15 +31,16 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!-- WRITE_SETTINGS is required to record the upcoming alarm prior to L -->
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         android:maxSdkVersion="19" />
-    <!-- READ_PHONE_STATE is required to determine when a phone call exists prior to M -->
-    <uses-permission
-        android:name="android.permission.READ_PHONE_STATE"
-        android:maxSdkVersion="22" />
 
     <application
         android:name=".DeskClockApplication"
@@ -63,7 +64,8 @@
             android:name=".DeskClock"
             android:label="@string/app_label"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -113,7 +115,8 @@
             android:launchMode="singleInstance"
             android:showWhenLocked="true"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@android:style/Theme.NoDisplay"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DISMISS_ALARM" />
                 <action android:name="android.intent.action.DISMISS_TIMER" />
@@ -129,7 +132,8 @@
         <activity-alias
             android:name=".HandleSetAlarmApiCalls"
             android:permission="com.android.alarm.permission.SET_ALARM"
-            android:targetActivity=".HandleApiCalls">
+            android:targetActivity=".HandleApiCalls"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SET_ALARM" />
                 <action android:name="android.intent.action.SET_TIMER" />
@@ -160,13 +164,14 @@
 
         <provider
             android:name=".provider.ClockProvider"
-            android:authorities="com.android.deskclock"
+            android:authorities="@string/clock_provider"
             android:directBootAware="true"
             android:exported="false" />
 
         <receiver
             android:name=".AlarmInitReceiver"
-            android:directBootAware="true">
+            android:directBootAware="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
@@ -183,6 +188,7 @@
 
         <service
             android:name=".alarms.AlarmService"
+            android:foregroundServiceType="systemExempted"
             android:directBootAware="true" />
 
         <!-- ============================================================== -->
@@ -211,6 +217,7 @@
         <service
             android:name=".timer.TimerService"
             android:description="@string/timer_service_desc"
+            android:foregroundServiceType="systemExempted"
             android:directBootAware="true" />
 
         <!-- ============================================================== -->
@@ -220,6 +227,7 @@
         <service
             android:name=".stopwatch.StopwatchService"
             android:description="@string/stopwatch_service_desc"
+            android:foregroundServiceType="systemExempted"
             android:directBootAware="true" />
 
 
@@ -243,7 +251,8 @@
         <service
             android:name=".Screensaver"
             android:label="@string/app_label"
-            android:permission="android.permission.BIND_DREAM_SERVICE">
+            android:permission="android.permission.BIND_DREAM_SERVICE"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.service.dreams.DreamService" />
                 <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED" />
@@ -261,7 +270,8 @@
 
         <receiver
             android:name="com.android.alarmclock.AnalogAppWidgetProvider"
-            android:label="@string/analog_gadget">
+            android:label="@string/analog_gadget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -276,7 +286,8 @@
 
         <receiver
             android:name="com.android.alarmclock.DigitalAppWidgetProvider"
-            android:label="@string/digital_gadget">
+            android:label="@string/digital_gadget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED" />
